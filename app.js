@@ -87,10 +87,64 @@ function renderCountry(country) {
   return card;
 }
 
+const MOBILE_MQ = window.matchMedia('(max-width: 599px)');
+const SELECTED_KEY = 'euro-coins-selected-v1';
+let selectedCode = localStorage.getItem(SELECTED_KEY) || COUNTRIES[0].code;
+
+function setSelected(code) {
+  selectedCode = code;
+  localStorage.setItem(SELECTED_KEY, code);
+}
+
 function render() {
   album.innerHTML = '';
-  for (const c of COUNTRIES) album.appendChild(renderCountry(c));
+  if (MOBILE_MQ.matches) {
+    const c = COUNTRIES.find(x => x.code === selectedCode) || COUNTRIES[0];
+    album.appendChild(renderCountry(c));
+    updatePageTitle();
+  } else {
+    for (const c of COUNTRIES) album.appendChild(renderCountry(c));
+    document.getElementById('page-title').textContent = 'Euromunten verzameling';
+  }
   renderProgress();
+  renderDrawer();
+}
+
+function updatePageTitle() {
+  const c = COUNTRIES.find(x => x.code === selectedCode) || COUNTRIES[0];
+  document.getElementById('page-title').textContent = `${c.flag} ${c.nl}`;
+}
+
+function renderDrawer() {
+  const list = document.getElementById('drawer-list');
+  list.innerHTML = '';
+  for (const c of COUNTRIES) {
+    const n = countCountry(c.code);
+    const total = DENOMINATIONS.length;
+    const btn = document.createElement('button');
+    btn.className = 'drawer-item' + (c.code === selectedCode ? ' active' : '') + (n === total ? ' complete' : '');
+    btn.dataset.code = c.code;
+    btn.innerHTML = `
+      <span class="drawer-item-flag">${c.flag}</span>
+      <span class="drawer-item-name">${c.nl}</span>
+      <span class="drawer-item-progress">(${n}/${total})</span>
+    `;
+    btn.addEventListener('click', () => {
+      setSelected(c.code);
+      closeDrawer();
+      render();
+    });
+    list.appendChild(btn);
+  }
+}
+
+function updateDrawerCountry(code) {
+  const item = document.querySelector(`.drawer-item[data-code="${code}"]`);
+  if (!item) return;
+  const n = countCountry(code);
+  const total = DENOMINATIONS.length;
+  item.querySelector('.drawer-item-progress').textContent = `(${n}/${total})`;
+  item.classList.toggle('complete', n === total);
 }
 
 function updateCountryProgress(code) {
@@ -108,6 +162,7 @@ function toggleCoin(code, denomId, btn) {
   btn.innerHTML = coinSVG(denom, collected);
   btn.setAttribute('aria-pressed', String(collected));
   updateCountryProgress(code);
+  updateDrawerCountry(code);
   renderProgress();
   scheduleSync();
 }
@@ -228,6 +283,33 @@ $('save-btn').addEventListener('click', async () => {
   dlg.close();
   await initialPull();
 });
+
+// ---------- Drawer (mobiel) ----------
+const drawer = $('drawer');
+const drawerBackdrop = $('drawer-backdrop');
+const menuBtn = $('menu-btn');
+
+function openDrawer() {
+  drawer.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+  drawerBackdrop.hidden = false;
+  menuBtn.setAttribute('aria-expanded', 'true');
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+  drawerBackdrop.hidden = true;
+  menuBtn.setAttribute('aria-expanded', 'false');
+}
+menuBtn.addEventListener('click', () => {
+  drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+});
+drawerBackdrop.addEventListener('click', closeDrawer);
+$('drawer-close').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
+// Re-render bij wisselen tussen mobiel en desktop
+MOBILE_MQ.addEventListener('change', () => { closeDrawer(); render(); });
 
 // ---------- Boot ----------
 render();

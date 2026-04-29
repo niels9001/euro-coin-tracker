@@ -9,7 +9,8 @@
 </head>
 <body>
   <header class="topbar">
-    <h1>Euromunten verzameling</h1>
+    <button id="menu-btn" class="icon-btn menu-btn" aria-label="Landenmenu" aria-expanded="false">☰</button>
+    <h1 id="page-title">Euromunten verzameling</h1>
     <div class="topbar-right">
       <span id="progress" class="progress" title="Totaal verzameld">0/0</span>
       <span id="sync-status" class="sync-status" title="Sync-status">⚠</span>
@@ -18,6 +19,15 @@
   </header>
 
   <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <span>Landen</span>
+      <button id="drawer-close" class="icon-btn" aria-label="Sluit menu">✕</button>
+    </div>
+    <nav id="drawer-list" class="drawer-list"></nav>
+  </aside>
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
 
   <main id="album" class="album"></main>
 
