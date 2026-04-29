@@ -56,4 +56,16 @@ function deobfuscate(s) { try { return decodeURIComponent(escape(atob(s))); } ca
 export function getToken()        { const v = localStorage.getItem(TOKEN_KEY); return v ? deobfuscate(v) : ''; }
 export function setToken(t)       { if (t) localStorage.setItem(TOKEN_KEY, obfuscate(t)); else localStorage.removeItem(TOKEN_KEY); }
 export function getGistId()       { return localStorage.getItem(GIST_KEY) || ''; }
-export function setGistId(id)     { if (id) localStorage.setItem(GIST_KEY, id); else localStorage.removeItem(GIST_KEY); }
+export function setGistId(id)     {
+  const clean = sanitizeGistId(id);
+  if (clean) localStorage.setItem(GIST_KEY, clean); else localStorage.removeItem(GIST_KEY);
+}
+
+// Accepteert: kale ID, gist URL, raw URL — geeft alleen het hex-ID terug
+export function sanitizeGistId(input) {
+  if (!input) return '';
+  const s = String(input).trim();
+  // Probeer een hex-string van 20+ chars te vinden (gist IDs zijn typisch 32 hex chars)
+  const m = s.match(/[0-9a-f]{20,}/i);
+  return m ? m[0] : '';
+}

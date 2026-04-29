@@ -2,7 +2,7 @@ import { COUNTRIES, DENOMINATIONS, TOTAL_COINS, flagUrl } from './data.js';
 import { coinSVG } from './coins.js';
 import {
   loadState, saveState, defaultState, mergeWithDefault,
-  getToken, setToken, getGistId, setGistId,
+  getToken, setToken, getGistId, setGistId, sanitizeGistId,
 } from './storage.js';
 import { testToken, createGist, fetchGist, pushGist, findExistingGist, debounce } from './gist-sync.js';
 
@@ -309,7 +309,11 @@ $('clear-btn').addEventListener('click', () => {
 
 $('save-btn').addEventListener('click', async () => {
   const t = patInput.value.trim();
-  let g = gistInput.value.trim();
+  let g = sanitizeGistId(gistInput.value);
+  if (gistInput.value.trim() && !g) {
+    setMsg('De Gist-ID lijkt niet geldig. Plak alleen het hex-ID (32 tekens) of de volledige Gist-URL.', 'err');
+    return;
+  }
   setToken(t);
 
   // Als token ingevuld maar Gist-ID leeg: probeer automatisch te vinden
@@ -323,7 +327,7 @@ $('save-btn').addEventListener('click', async () => {
         setMsg(`✓ Bestaande Gist gevonden: ${g}`, 'ok');
       } else {
         setMsg('Geen Gist gevonden. Klik op "Nieuwe Gist aanmaken" of plak handmatig een Gist-ID.', 'err');
-        return; // dialog open laten zodat user kan reageren
+        return;
       }
     } catch (e) {
       setMsg('✗ ' + e.message, 'err');
@@ -332,6 +336,7 @@ $('save-btn').addEventListener('click', async () => {
   }
 
   setGistId(g);
+  gistInput.value = g;
   dlg.close();
   await initialPull();
 });
