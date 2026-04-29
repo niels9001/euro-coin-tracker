@@ -115,16 +115,32 @@ body {
 }
 
 .album {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem;
+}
+.album-grid {
   display: grid;
   gap: 1rem;
-  padding: 1rem;
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 600px)  { .album { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px)  { .album { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1200px) { .album { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 1500px) { .album { grid-template-columns: repeat(5, 1fr); } }
+@media (min-width: 600px)  { .album-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px)  { .album-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1200px) { .album-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1500px) { .album-grid { grid-template-columns: repeat(5, 1fr); } }
+
+.group-heading {
+  margin: 0.5rem 0 -0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--gold-soft);
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 1rem;
+}
 
 /* Mobiel: één land tegelijk, groter, vol scherm */
 @media (max-width: 599px) {
@@ -132,7 +148,7 @@ body {
   .country { padding: 1.25rem 1rem 1rem; }
   .country-name { font-size: 1.3rem; }
   .country-native { font-size: 0.85rem; }
-  .flag { font-size: 2rem; padding: 4px 10px; }
+  .flag img { width: 64px; height: 42px; }
   .coin-btn { width: 72px; height: 72px; }
   .coins { gap: 0.6rem; }
 }
@@ -191,11 +207,28 @@ body {
 .drawer-item.complete .drawer-item-progress { color: #6ad48f; font-weight: 600; }
 .drawer-item-flag {
   background: white;
-  padding: 1px 5px;
+  padding: 2px;
   border-radius: 3px;
-  font-size: 1.1rem;
-  line-height: 1.2;
+  line-height: 0;
   box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+.drawer-item-flag img {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  display: block;
+  border-radius: 1px;
+}
+
+.drawer-group-heading {
+  padding: 0.6rem 1rem 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold-soft);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: 0.4rem;
 }
 .drawer-item-name { flex: 1; }
 .drawer-item-progress {
@@ -253,12 +286,29 @@ body {
 .flag {
   display: inline-block;
   background: white;
-  padding: 2px 6px;
+  padding: 4px;
   border-radius: 4px;
-  font-size: 1.4rem;
-  line-height: 1;
   margin-bottom: 0.6rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  line-height: 0;
+}
+.flag img {
+  width: 42px;
+  height: 28px;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+}
+
+.title-flag {
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  vertical-align: -2px;
+  border-radius: 2px;
+  background: white;
+  padding: 1px;
+  margin-right: 4px;
 }
 
 .coins {

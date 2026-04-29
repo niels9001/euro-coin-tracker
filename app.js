@@ -1,4 +1,4 @@
-import { COUNTRIES, DENOMINATIONS, TOTAL_COINS } from './data.js';
+import { COUNTRIES, DENOMINATIONS, TOTAL_COINS, flagUrl } from './data.js';
 import { coinSVG } from './coins.js';
 import {
   loadState, saveState, defaultState, mergeWithDefault,
@@ -71,7 +71,7 @@ function renderCountry(country) {
 
   const flag = document.createElement('div');
   flag.className = 'flag';
-  flag.textContent = country.flag;
+  flag.innerHTML = `<img src="${flagUrl(country.code)}" alt="Vlag ${country.nl}" loading="lazy" decoding="async">`;
   card.appendChild(flag);
 
   const coins = document.createElement('div');
@@ -98,34 +98,64 @@ function setSelected(code) {
 
 function render() {
   album.innerHTML = '';
+  const eurozone = COUNTRIES.filter(c => c.eurozone);
+  const others = COUNTRIES.filter(c => !c.eurozone);
+
   if (MOBILE_MQ.matches) {
     const c = COUNTRIES.find(x => x.code === selectedCode) || COUNTRIES[0];
     album.appendChild(renderCountry(c));
     updatePageTitle();
   } else {
-    for (const c of COUNTRIES) album.appendChild(renderCountry(c));
+    appendGroup(eurozone, null);
+    if (others.length) appendGroup(others, 'Niet-eurozone landen');
     document.getElementById('page-title').textContent = 'Euromunten verzameling';
   }
   renderProgress();
   renderDrawer();
 }
 
+function appendGroup(list, heading) {
+  if (heading) {
+    const h = document.createElement('h2');
+    h.className = 'group-heading';
+    h.textContent = heading;
+    album.appendChild(h);
+  }
+  const grid = document.createElement('div');
+  grid.className = 'album-grid';
+  for (const c of list) grid.appendChild(renderCountry(c));
+  album.appendChild(grid);
+}
+
 function updatePageTitle() {
   const c = COUNTRIES.find(x => x.code === selectedCode) || COUNTRIES[0];
-  document.getElementById('page-title').textContent = `${c.flag} ${c.nl}`;
+  document.getElementById('page-title').innerHTML = `<img class="title-flag" src="${flagUrl(c.code)}" alt=""> ${c.nl}`;
 }
 
 function renderDrawer() {
   const list = document.getElementById('drawer-list');
   list.innerHTML = '';
-  for (const c of COUNTRIES) {
+  const eurozone = COUNTRIES.filter(c => c.eurozone);
+  const others = COUNTRIES.filter(c => !c.eurozone);
+  appendDrawerGroup(list, eurozone, null);
+  if (others.length) appendDrawerGroup(list, others, 'Niet-eurozone');
+}
+
+function appendDrawerGroup(list, items, heading) {
+  if (heading) {
+    const h = document.createElement('div');
+    h.className = 'drawer-group-heading';
+    h.textContent = heading;
+    list.appendChild(h);
+  }
+  for (const c of items) {
     const n = countCountry(c.code);
     const total = DENOMINATIONS.length;
     const btn = document.createElement('button');
     btn.className = 'drawer-item' + (c.code === selectedCode ? ' active' : '') + (n === total ? ' complete' : '');
     btn.dataset.code = c.code;
     btn.innerHTML = `
-      <span class="drawer-item-flag">${c.flag}</span>
+      <span class="drawer-item-flag"><img src="${flagUrl(c.code)}" alt=""></span>
       <span class="drawer-item-name">${c.nl}</span>
       <span class="drawer-item-progress">(${n}/${total})</span>
     `;

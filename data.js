@@ -1,32 +1,37 @@
 // Landen in dezelfde volgorde als de fysieke verzamelmap.
-// nl = Nederlandse naam, native = oorspronkelijke naam, flag = emoji vlag
+// nl = Nederlandse naam, native = oorspronkelijke naam, eurozone = of het euromunten uitgeeft
 export const COUNTRIES = [
-  { code: 'BE', nl: 'België',     native: 'Belgique / België', flag: '🇧🇪' },
-  { code: 'BG', nl: 'Bulgarije',  native: 'България',          flag: '🇧🇬' },
-  { code: 'CZ', nl: 'Tsjechië',   native: 'Česko',             flag: '🇨🇿' },
-  { code: 'DE', nl: 'Duitsland',  native: 'Deutschland',       flag: '🇩🇪' },
-  { code: 'EE', nl: 'Estland',    native: 'Eesti',             flag: '🇪🇪' },
-  { code: 'IE', nl: 'Ierland',    native: 'Éire',              flag: '🇮🇪' },
-  { code: 'ES', nl: 'Spanje',     native: 'España',            flag: '🇪🇸' },
-  { code: 'GR', nl: 'Griekenland',native: 'Ελλάδα',            flag: '🇬🇷' },
-  { code: 'FR', nl: 'Frankrijk',  native: 'France',            flag: '🇫🇷' },
-  { code: 'HR', nl: 'Kroatië',    native: 'Hrvatska',          flag: '🇭🇷' },
-  { code: 'IT', nl: 'Italië',     native: 'Italia',            flag: '🇮🇹' },
-  { code: 'CY', nl: 'Cyprus',     native: 'Κύπρος',            flag: '🇨🇾' },
-  { code: 'LT', nl: 'Litouwen',   native: 'Lietuva',           flag: '🇱🇹' },
-  { code: 'LV', nl: 'Letland',    native: 'Latvija',           flag: '🇱🇻' },
-  { code: 'LU', nl: 'Luxemburg',  native: 'Luxembourg',        flag: '🇱🇺' },
-  { code: 'HU', nl: 'Hongarije',  native: 'Magyarország',      flag: '🇭🇺' },
-  { code: 'MT', nl: 'Malta',      native: 'Malta',             flag: '🇲🇹' },
-  { code: 'NL', nl: 'Nederland',  native: 'Nederland',         flag: '🇳🇱' },
-  { code: 'AT', nl: 'Oostenrijk', native: 'Österreich',        flag: '🇦🇹' },
-  { code: 'PL', nl: 'Polen',      native: 'Polska',            flag: '🇵🇱' },
-  { code: 'PT', nl: 'Portugal',   native: 'Portugal',          flag: '🇵🇹' },
-  { code: 'RO', nl: 'Roemenië',   native: 'România',           flag: '🇷🇴' },
-  { code: 'SI', nl: 'Slovenië',   native: 'Slovenija',         flag: '🇸🇮' },
-  { code: 'SK', nl: 'Slowakije',  native: 'Slovensko',         flag: '🇸🇰' },
-  { code: 'FI', nl: 'Finland',    native: 'Suomi',             flag: '🇫🇮' },
+  { code: 'BE', nl: 'België',     native: 'Belgique / België', eurozone: true  },
+  { code: 'BG', nl: 'Bulgarije',  native: 'България',          eurozone: false },
+  { code: 'CZ', nl: 'Tsjechië',   native: 'Česko',             eurozone: false },
+  { code: 'DE', nl: 'Duitsland',  native: 'Deutschland',       eurozone: true  },
+  { code: 'EE', nl: 'Estland',    native: 'Eesti',             eurozone: true  },
+  { code: 'IE', nl: 'Ierland',    native: 'Éire',              eurozone: true  },
+  { code: 'ES', nl: 'Spanje',     native: 'España',            eurozone: true  },
+  { code: 'GR', nl: 'Griekenland',native: 'Ελλάδα',            eurozone: true  },
+  { code: 'FR', nl: 'Frankrijk',  native: 'France',            eurozone: true  },
+  { code: 'HR', nl: 'Kroatië',    native: 'Hrvatska',          eurozone: true  },
+  { code: 'IT', nl: 'Italië',     native: 'Italia',            eurozone: true  },
+  { code: 'CY', nl: 'Cyprus',     native: 'Κύπρος',            eurozone: true  },
+  { code: 'LT', nl: 'Litouwen',   native: 'Lietuva',           eurozone: true  },
+  { code: 'LV', nl: 'Letland',    native: 'Latvija',           eurozone: true  },
+  { code: 'LU', nl: 'Luxemburg',  native: 'Luxembourg',        eurozone: true  },
+  { code: 'HU', nl: 'Hongarije',  native: 'Magyarország',      eurozone: false },
+  { code: 'MT', nl: 'Malta',      native: 'Malta',             eurozone: true  },
+  { code: 'NL', nl: 'Nederland',  native: 'Nederland',         eurozone: true  },
+  { code: 'AT', nl: 'Oostenrijk', native: 'Österreich',        eurozone: true  },
+  { code: 'PL', nl: 'Polen',      native: 'Polska',            eurozone: false },
+  { code: 'PT', nl: 'Portugal',   native: 'Portugal',          eurozone: true  },
+  { code: 'RO', nl: 'Roemenië',   native: 'România',           eurozone: false },
+  { code: 'SI', nl: 'Slovenië',   native: 'Slovenija',         eurozone: true  },
+  { code: 'SK', nl: 'Slowakije',  native: 'Slovensko',         eurozone: true  },
+  { code: 'FI', nl: 'Finland',    native: 'Suomi',             eurozone: true  },
 ];
+
+// Helper: vlag-image URL (SVG via flagcdn.com — werkt op Windows ook)
+export function flagUrl(code) {
+  return `https://flagcdn.com/${code.toLowerCase()}.svg`;
+}
 
 // 8 muntdenominaties in vaste volgorde (zoals in de map: van klein naar groot)
 export const DENOMINATIONS = [
