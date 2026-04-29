@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a2a5e">
+  <title>Euromunten verzameling</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Euromunten verzameling</h1>
+    <div class="topbar-right">
+      <span id="progress" class="progress" title="Totaal verzameld">0/0</span>
+      <span id="sync-status" class="sync-status" title="Sync-status">⚠</span>
+      <button id="settings-btn" class="icon-btn" aria-label="Instellingen">⚙</button>
+    </div>
+  </header>
+
+  <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+
+  <main id="album" class="album"></main>
+
+  <dialog id="settings" class="settings">
+    <form method="dialog" class="settings-form">
+      <h2>Instellingen — Sync</h2>
+      <p class="hint">
+        Sync via een privé GitHub Gist. Maak een
+        <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">Personal Access Token</a>
+        met scope <code>gist</code> en plak hieronder.
+      </p>
+
+      <label>GitHub Personal Access Token
+        <input type="password" id="pat-input" autocomplete="off" placeholder="ghp_…">
+      </label>
+
+      <label>Gist ID (laat leeg om nieuw aan te maken)
+        <input type="text" id="gist-input" autocomplete="off" placeholder="bv. 1a2b3c4d…">
+      </label>
+
+      <div class="settings-actions">
+        <button type="button" id="test-btn">Verbinding testen</button>
+        <button type="button" id="create-gist-btn">Nieuwe Gist aanmaken</button>
+        <button type="button" id="pull-btn">Nu ophalen uit Gist</button>
+      </div>
+
+      <p id="settings-msg" class="settings-msg" role="status"></p>
+
+      <div class="settings-footer">
+        <button type="button" id="clear-btn" class="danger">Token wissen</button>
+        <button type="button" id="save-btn" class="primary">Opslaan & sluiten</button>
+        <button value="cancel" class="ghost">Annuleer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
