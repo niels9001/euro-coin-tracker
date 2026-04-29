@@ -25,6 +25,14 @@ export async function testToken(token) {
   return u.login;
 }
 
+export async function findExistingGist(token) {
+  // Zoekt door de eigen gists naar een bestand met naam euro-coins.json
+  const data = await ghFetch('/gists?per_page=100', token);
+  if (!Array.isArray(data)) return null;
+  const match = data.find(g => g.files && g.files[FILENAME]);
+  return match ? match.id : null;
+}
+
 export async function createGist(token, state) {
   const body = {
     description: 'Euro coin tracker state',

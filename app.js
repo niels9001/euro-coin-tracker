@@ -4,7 +4,7 @@ import {
   loadState, saveState, defaultState, mergeWithDefault,
   getToken, setToken, getGistId, setGistId,
 } from './storage.js';
-import { testToken, createGist, fetchGist, pushGist, debounce } from './gist-sync.js';
+import { testToken, createGist, fetchGist, pushGist, findExistingGist, debounce } from './gist-sync.js';
 
 let state = loadState();
 
@@ -308,8 +308,30 @@ $('clear-btn').addEventListener('click', () => {
 });
 
 $('save-btn').addEventListener('click', async () => {
-  setToken(patInput.value.trim());
-  setGistId(gistInput.value.trim());
+  const t = patInput.value.trim();
+  let g = gistInput.value.trim();
+  setToken(t);
+
+  // Als token ingevuld maar Gist-ID leeg: probeer automatisch te vinden
+  if (t && !g) {
+    setMsg('Geen Gist-ID — zoeken naar bestaande euro-coins.json…');
+    try {
+      const found = await findExistingGist(t);
+      if (found) {
+        g = found;
+        gistInput.value = g;
+        setMsg(`✓ Bestaande Gist gevonden: ${g}`, 'ok');
+      } else {
+        setMsg('Geen Gist gevonden. Klik op "Nieuwe Gist aanmaken" of plak handmatig een Gist-ID.', 'err');
+        return; // dialog open laten zodat user kan reageren
+      }
+    } catch (e) {
+      setMsg('✗ ' + e.message, 'err');
+      return;
+    }
+  }
+
+  setGistId(g);
   dlg.close();
   await initialPull();
 });
